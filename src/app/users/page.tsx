@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 interface User {
   id: string
@@ -79,6 +80,11 @@ export default function UsersPage() {
 
   return (
     <div className="p-8 max-w-4xl mx-auto space-y-8">
+      {/* Theme Toggle */}
+      <div className="fixed top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
+      
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Users Management</h1>
         <p className="text-muted-foreground">
