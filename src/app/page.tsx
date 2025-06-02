@@ -20,8 +20,13 @@ export default function Home() {
             </code>
             .
           </li>
-          <li className="tracking-[-.01em]">
+          <li className="mb-2 tracking-[-.01em]">
             Save and see your changes instantly.
+          </li>
+          <li className="tracking-[-.01em]">
+            <a href="/users" className="text-blue-600 hover:text-blue-800 underline">
+              Try the Prisma Users demo →
+            </a>
           </li>
         </ol>
 
