@@ -1,6 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 interface User {
   id: string
@@ -57,76 +61,119 @@ export default function UsersPage() {
     fetchUsers()
   }, [])
 
-  if (loading) return <div className="p-8">Loading...</div>
-  if (error) return <div className="p-8 text-red-600">Error: {error}</div>
+  if (loading) return (
+    <div className="p-8 max-w-4xl mx-auto">
+      <div className="text-center">Loading...</div>
+    </div>
+  )
+  
+  if (error) return (
+    <div className="p-8 max-w-4xl mx-auto">
+      <Card className="border-red-200">
+        <CardContent className="pt-6">
+          <div className="text-red-600">Error: {error}</div>
+        </CardContent>
+      </Card>
+    </div>
+  )
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8">Users Management</h1>
+    <div className="p-8 max-w-4xl mx-auto space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Users Management</h1>
+        <p className="text-muted-foreground">
+          Manage your users with Prisma ORM and shadcn/ui components
+        </p>
+      </div>
       
       {/* Create User Form */}
-      <div className="bg-gray-50 p-6 rounded-lg mb-8">
-        <h2 className="text-xl font-semibold mb-4">Add New User</h2>
-        <form onSubmit={createUser} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email (required)
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Name (optional)
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={submitting}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
-          >
-            {submitting ? 'Creating...' : 'Create User'}
-          </button>
-        </form>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Add New User</CardTitle>
+          <CardDescription>
+            Create a new user account by providing an email address and optional name.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={createUser} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email *</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="user@example.com"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Enter full name (optional)"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              />
+            </div>
+            <Button type="submit" disabled={submitting} className="w-full sm:w-auto">
+              {submitting ? 'Creating...' : 'Create User'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
 
       {/* Users List */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Users ({users.length})</h2>
-        {users.length === 0 ? (
-          <p className="text-gray-500">No users found. Create your first user above!</p>
-        ) : (
-          <div className="space-y-4">
-            {users.map((user) => (
-              <div key={user.id} className="bg-white p-4 rounded-lg border shadow-sm">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-medium">{user.name || 'No name'}</h3>
-                    <p className="text-gray-600">{user.email}</p>
-                    <p className="text-sm text-gray-500">
-                      Created: {new Date(user.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <span className="text-xs text-gray-400">ID: {user.id}</span>
-                </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>All Users ({users.length})</CardTitle>
+          <CardDescription>
+            A list of all users in your database
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {users.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="text-muted-foreground">No users found.</div>
+              <div className="text-sm text-muted-foreground mt-1">
+                Create your first user using the form above!
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {users.map((user) => (
+                <Card key={user.id} className="shadow-sm">
+                  <CardContent className="pt-6">
+                    <div className="flex justify-between items-start">
+                      <div className="space-y-1">
+                        <h3 className="font-medium leading-none">
+                          {user.name || 'No name provided'}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {user.email}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Created: {new Date(user.createdAt).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </p>
+                      </div>
+                      <div className="text-xs text-muted-foreground font-mono">
+                        {user.id}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

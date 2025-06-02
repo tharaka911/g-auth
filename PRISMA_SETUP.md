@@ -1,6 +1,6 @@
-# Prisma ORM Integration
+# Prisma ORM Integration with shadcn/ui
 
-This project now has Prisma ORM integrated for database management with PostgreSQL.
+This project now has Prisma ORM integrated for database management with PostgreSQL, along with beautiful shadcn/ui components for the user interface.
 
 ## What's Been Set Up
 
@@ -16,10 +16,15 @@ This project now has Prisma ORM integrated for database management with PostgreS
 - `src/lib/prisma.ts` - Prisma client singleton
 - `.env` - Database connection string
 
+#### shadcn/ui Components:
+- `components.json` - shadcn/ui configuration
+- `src/lib/utils.ts` - Utility functions for component styling
+- `src/components/ui/` - shadcn/ui component library (Button, Card, Input, Form, Label)
+
 #### Example Implementation:
 - `src/app/api/users/route.ts` - API routes for user CRUD operations
-- `src/app/users/page.tsx` - Demo page showing Prisma integration
-- `src/app/page.tsx` - Updated with link to demo
+- `src/app/users/page.tsx` - Demo page with shadcn/ui components and Prisma integration
+- `src/app/page.tsx` - Modern homepage with shadcn/ui components
 
 #### Package Scripts:
 - `db:generate` - Generate Prisma client
@@ -33,9 +38,18 @@ This project now has Prisma ORM integrated for database management with PostgreS
 ```bash
 npm run dev
 ```
-Visit `http://localhost:3000/users` to see the Prisma demo in action.
+Visit `http://localhost:3000/users` to see the Prisma demo with shadcn/ui components in action.
 
-### 2. Database Operations
+### 2. Adding shadcn/ui Components
+
+To add new shadcn/ui components:
+```bash
+npx shadcn@latest add [component-name]
+```
+
+Available components: button, card, input, form, label, dialog, dropdown-menu, table, and many more.
+
+### 3. Database Operations
 
 #### Generate Prisma Client:
 ```bash
@@ -58,7 +72,7 @@ npm run db:studio
 npx prisma studio
 ```
 
-### 3. Using Prisma in Your Code
+### 4. Using Prisma in Your Code
 
 #### Import the client:
 ```typescript
