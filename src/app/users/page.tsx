@@ -11,6 +11,8 @@ interface User {
   id: string
   email: string
   name: string | null
+  image: string | null
+  googleId: string | null
   createdAt: string
   updatedAt: string
 }
