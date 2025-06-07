@@ -41,6 +41,9 @@ export function ThemeProvider({
   useEffect(() => {
     const root = window.document.documentElement
 
+    console.log('ThemeProvider: Applying theme effect, current theme:', theme)
+    console.log('ThemeProvider: Current classes before:', root.classList.toString())
+
     root.classList.remove("light", "dark")
 
     if (theme === "system") {
@@ -49,18 +52,23 @@ export function ThemeProvider({
         ? "dark"
         : "light"
 
+      console.log('ThemeProvider: System theme detected:', systemTheme)
       root.classList.add(systemTheme)
+      console.log('ThemeProvider: Classes after system theme:', root.classList.toString())
       return
     }
 
+    console.log('ThemeProvider: Adding theme class:', theme)
     root.classList.add(theme)
+    console.log('ThemeProvider: Classes after theme application:', root.classList.toString())
   }, [theme])
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage?.setItem(storageKey, theme)
-      setTheme(theme)
+    setTheme: (newTheme: Theme) => {
+      console.log('ThemeProvider: Setting theme from', theme, 'to', newTheme)
+      localStorage?.setItem(storageKey, newTheme)
+      setTheme(newTheme)
     },
   }
 
