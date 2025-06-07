@@ -62,10 +62,10 @@ export function useAuth() {
     }
   };
 
-  const signIn = () => {
-    console.log('🚪 [FRONTEND] useAuth: signIn called - redirecting to /api/auth/signin');
-    // Redirect to Google OAuth
-    window.location.href = '/api/auth/signin';
+  const signIn = (provider: 'google' | 'github' = 'google') => {
+    console.log(`🚪 [FRONTEND] useAuth: signIn called with provider: ${provider}`);
+    // Redirect to OAuth provider
+    window.location.href = `/api/auth/signin?provider=${provider}`;
   };
 
   const signOut = async () => {

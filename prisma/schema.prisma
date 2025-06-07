@@ -13,15 +13,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// User model with Google OAuth support
+// User model with Google and GitHub OAuth support
 model User {
-  id          String   @id @default(cuid())
-  email       String   @unique
-  name        String?
-  image       String?
-  googleId    String?  @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String   @id @default(cuid())
+  email           String   @unique
+  name            String?
+  image           String?
+  googleId        String?  @unique
+  githubId        String?  @unique
+  primaryProvider String?  // 'google' or 'github' - tracks which was used first
+  linkedProviders String[] // Array of linked providers ['google', 'github']
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@map("users")
 }
