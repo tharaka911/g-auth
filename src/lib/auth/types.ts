@@ -50,6 +50,8 @@ export interface LinkingTokenData {
   provider: 'google' | 'github' | 'discord';
   providerUser: GoogleUser | GitHubUser | DiscordUser;
   existingUserId: string;
+  existingUserProvider: 'google' | 'github' | 'discord';
+  existingUserLinkedProviders: string[];
   timestamp: number;
 }
 

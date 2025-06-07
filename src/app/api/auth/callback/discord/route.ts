@@ -53,11 +53,17 @@ export async function GET(request: NextRequest) {
     if (existingUser && !existingUser.discordId) {
       // Account exists with different provider - initiate linking flow
       console.log('🔗 [API] Account found with different provider, initiating linking flow...');
+      console.log('📋 [API] Existing user info:', {
+        primaryProvider: existingUser.primaryProvider,
+        linkedProviders: existingUser.linkedProviders
+      });
       const linkingToken = generateLinkingToken({
         email: discordUser.email,
         provider: 'discord',
         providerUser: discordUser,
         existingUserId: existingUser.id,
+        existingUserProvider: existingUser.primaryProvider as 'google' | 'github' | 'discord',
+        existingUserLinkedProviders: existingUser.linkedProviders,
       });
       
       console.log('🔄 [API] Redirecting to account linking page...');

@@ -10,6 +10,7 @@ interface LinkingData {
   email: string;
   provider: 'google' | 'github' | 'discord';
   existingProvider: string;
+  existingProviders: string[];
   providerUser: {
     name: string;
     picture: string;
@@ -45,10 +46,29 @@ function LinkAccountContent() {
       );
       
       const decoded = JSON.parse(jsonPayload);
+      console.log('🔍 [FRONTEND] Decoded token data:', decoded);
+      
+      // Helper function to format provider name for display
+      const formatProviderName = (provider: string) => {
+        return provider.charAt(0).toUpperCase() + provider.slice(1);
+      };
+      
+      // Determine existing provider display name
+      let existingProviderDisplay = '';
+      if (decoded.existingUserProvider) {
+        existingProviderDisplay = formatProviderName(decoded.existingUserProvider);
+      } else if (decoded.existingUserLinkedProviders && decoded.existingUserLinkedProviders.length > 0) {
+        existingProviderDisplay = decoded.existingUserLinkedProviders.map(formatProviderName).join('/');
+      } else {
+        // Fallback to old hardcoded logic if new data is not available
+        existingProviderDisplay = decoded.provider === 'github' ? 'Google' : decoded.provider === 'discord' ? 'Google/GitHub' : 'GitHub';
+      }
+      
       setLinkingData({
         email: decoded.email,
         provider: decoded.provider,
-        existingProvider: decoded.provider === 'github' ? 'Google' : decoded.provider === 'discord' ? 'Google/GitHub' : 'GitHub',
+        existingProvider: existingProviderDisplay,
+        existingProviders: decoded.existingUserLinkedProviders || [],
         providerUser: decoded.providerUser,
       });
     } catch (err) {
@@ -125,8 +145,8 @@ function LinkAccountContent() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-2 text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
@@ -140,7 +160,7 @@ function LinkAccountContent() {
             <CardTitle className="text-red-600">Error</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-600 mb-4">{error || 'Invalid request'}</p>
+            <p className="text-muted-foreground mb-4">{error || 'Invalid request'}</p>
             <Button onClick={() => router.push('/')} className="w-full">
               Go Home
             </Button>
@@ -153,7 +173,7 @@ function LinkAccountContent() {
   const providerName = linkingData.provider === 'github' ? 'GitHub' : linkingData.provider === 'discord' ? 'Discord' : 'Google';
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle>Account Found</CardTitle>
@@ -177,8 +197,8 @@ function LinkAccountContent() {
                   }}
                 />
               ) : (
-                <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
-                  <span className="text-gray-600 text-xl font-semibold">
+                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+                  <span className="text-muted-foreground text-xl font-semibold">
                     {linkingData.providerUser.name?.charAt(0)?.toUpperCase() || '?'}
                   </span>
                 </div>
@@ -188,15 +208,15 @@ function LinkAccountContent() {
             <div className="space-y-4">
             <div>
               <p className="font-medium">{linkingData.providerUser.name}</p>
-              <p className="text-sm text-gray-600">{linkingData.email}</p>
+              <p className="text-sm text-muted-foreground">{linkingData.email}</p>
             </div>
             
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-700">
+            <div className="bg-muted/50 p-4 rounded-lg">
+              <p className="text-sm text-foreground">
                 An account already exists with <strong>{linkingData.email}</strong> using{' '}
                 <strong>{linkingData.existingProvider}</strong>.
               </p>
-              <p className="text-sm text-gray-700 mt-2">
+              <p className="text-sm text-foreground mt-2">
                 Would you like to link your <strong>{providerName}</strong> account to your existing{' '}
                 <strong>{linkingData.existingProvider}</strong> account?
               </p>
@@ -205,8 +225,8 @@ function LinkAccountContent() {
         </CardContent>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-            <p className="text-sm text-red-600">{error}</p>
+          <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3">
+            <p className="text-sm text-destructive">{error}</p>
           </div>
         )}
 
@@ -230,9 +250,9 @@ function LinkAccountContent() {
         </div>
         
         <div className="text-center pb-6">
-          <button 
+          <button
             onClick={() => router.push('/')}
-            className="text-sm text-gray-500 hover:text-gray-700"
+            className="text-sm text-muted-foreground hover:text-foreground"
           >
             Cancel and go home
           </button>
@@ -247,8 +267,8 @@ function LoadingFallback() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-        <p className="mt-2 text-gray-600">Loading...</p>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+        <p className="mt-2 text-muted-foreground">Loading...</p>
       </div>
     </div>
   );
