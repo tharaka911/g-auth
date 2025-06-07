@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 interface LinkingData {
   email: string;
-  provider: 'google' | 'github';
+  provider: 'google' | 'github' | 'discord';
   existingProvider: string;
   providerUser: {
     name: string;
@@ -48,7 +48,7 @@ function LinkAccountContent() {
       setLinkingData({
         email: decoded.email,
         provider: decoded.provider,
-        existingProvider: decoded.provider === 'github' ? 'Google' : 'GitHub',
+        existingProvider: decoded.provider === 'github' ? 'Google' : decoded.provider === 'discord' ? 'Google/GitHub' : 'GitHub',
         providerUser: decoded.providerUser,
       });
     } catch (err) {
@@ -150,7 +150,7 @@ function LinkAccountContent() {
     );
   }
 
-  const providerName = linkingData.provider === 'github' ? 'GitHub' : 'Google';
+  const providerName = linkingData.provider === 'github' ? 'GitHub' : linkingData.provider === 'discord' ? 'Discord' : 'Google';
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -164,13 +164,25 @@ function LinkAccountContent() {
         
         <CardContent className="space-y-6">
           <div className="text-center space-y-4">
-              <Image
-                src={linkingData.providerUser.picture}
-                alt="Profile"
-                width={64}
-                height={64}
-                className="w-16 h-16 rounded-full"
-              />
+              {linkingData.providerUser.picture && linkingData.providerUser.picture.trim() !== '' ? (
+                <Image
+                  src={linkingData.providerUser.picture}
+                  alt="Profile"
+                  width={64}
+                  height={64}
+                  className="w-16 h-16 rounded-full"
+                  onError={(e) => {
+                    // Hide the image if it fails to load
+                    (e.target as HTMLElement).style.display = 'none';
+                  }}
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
+                  <span className="text-gray-600 text-xl font-semibold">
+                    {linkingData.providerUser.name?.charAt(0)?.toUpperCase() || '?'}
+                  </span>
+                </div>
+              )}
             </div>
             
             <div className="space-y-4">

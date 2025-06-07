@@ -25,6 +25,19 @@ export interface GoogleUser {
   picture: string;
 }
 
+// Discord user response
+export interface DiscordUser {
+  id: string;
+  email: string;
+  name: string;
+  picture: string;
+  username: string;
+  global_name: string | null;
+  avatar: string | null;
+  discriminator: string;
+  verified: boolean;
+}
+
 // JWT payload
 export interface JWTPayload {
   userId: string;
@@ -34,11 +47,11 @@ export interface JWTPayload {
 // Account linking token data
 export interface LinkingTokenData {
   email: string;
-  provider: 'google' | 'github';
-  providerUser: GoogleUser | GitHubUser;
+  provider: 'google' | 'github' | 'discord';
+  providerUser: GoogleUser | GitHubUser | DiscordUser;
   existingUserId: string;
   timestamp: number;
 }
 
 // Provider types
-export type AuthProvider = 'google' | 'github';
+export type AuthProvider = 'google' | 'github' | 'discord';

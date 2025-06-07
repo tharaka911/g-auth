@@ -62,7 +62,7 @@ export function useAuth() {
     }
   };
 
-  const signIn = (provider: 'google' | 'github' = 'google') => {
+  const signIn = (provider: 'google' | 'github' | 'discord' = 'google') => {
     console.log(`🚪 [FRONTEND] useAuth: signIn called with provider: ${provider}`);
     // Redirect to OAuth provider
     window.location.href = `/api/auth/signin?provider=${provider}`;

@@ -5,6 +5,8 @@ const requiredEnvVars = {
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+  DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
+  DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
   JWT_SECRET: process.env.JWT_SECRET,
   DATABASE_URL: process.env.DATABASE_URL,
 } as const;
@@ -23,6 +25,8 @@ export const ENV = {
   GOOGLE_CLIENT_SECRET: requiredEnvVars.GOOGLE_CLIENT_SECRET!,
   GITHUB_CLIENT_ID: requiredEnvVars.GITHUB_CLIENT_ID!,
   GITHUB_CLIENT_SECRET: requiredEnvVars.GITHUB_CLIENT_SECRET!,
+  DISCORD_CLIENT_ID: requiredEnvVars.DISCORD_CLIENT_ID!,
+  DISCORD_CLIENT_SECRET: requiredEnvVars.DISCORD_CLIENT_SECRET!,
   JWT_SECRET: requiredEnvVars.JWT_SECRET!,
   DATABASE_URL: requiredEnvVars.DATABASE_URL!,
   NODE_ENV: process.env.NODE_ENV || 'development',
@@ -50,4 +54,15 @@ export const GITHUB_AUTH_CONFIG = {
   tokenUrl: 'https://github.com/login/oauth/access_token',
   userInfoUrl: 'https://api.github.com/user',
   userEmailUrl: 'https://api.github.com/user/emails',
+} as const;
+
+// Discord OAuth configuration
+export const DISCORD_AUTH_CONFIG = {
+  clientId: ENV.DISCORD_CLIENT_ID,
+  clientSecret: ENV.DISCORD_CLIENT_SECRET,
+  redirectUri: `${ENV.NEXTAUTH_URL}/api/auth/callback/discord`,
+  scope: 'identify email',
+  authUrl: 'https://discord.com/api/oauth2/authorize',
+  tokenUrl: 'https://discord.com/api/oauth2/token',
+  userInfoUrl: 'https://discord.com/api/users/@me',
 } as const;

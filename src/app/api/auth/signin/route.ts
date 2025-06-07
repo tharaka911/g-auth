@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getGoogleAuthUrl, getGitHubAuthUrl } from '@/lib/auth';
+import { getGoogleAuthUrl, getGitHubAuthUrl, getDiscordAuthUrl } from '@/lib/auth';
 
 // GET /api/auth/signin - Redirect to OAuth provider
 export async function GET(request: NextRequest) {
@@ -21,6 +21,10 @@ export async function GET(request: NextRequest) {
       console.log('🔗 [API] Generating Google OAuth URL...');
       authUrl = getGoogleAuthUrl();
       console.log('✅ [API] Google OAuth URL generated:', authUrl);
+    } else if (provider === 'discord') {
+      console.log('🔗 [API] Generating Discord OAuth URL...');
+      authUrl = getDiscordAuthUrl();
+      console.log('✅ [API] Discord OAuth URL generated:', authUrl);
     } else {
       console.error('❌ [API] Unsupported provider:', provider);
       return NextResponse.json(

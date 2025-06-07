@@ -1,5 +1,5 @@
 import { prisma } from '../prisma';
-import type { GoogleUser, GitHubUser } from './types';
+import type { GoogleUser, GitHubUser, DiscordUser } from './types';
 
 // Find user by email (for account linking detection)
 export async function findUserByEmail(email: string) {
@@ -11,6 +11,7 @@ export async function findUserByEmail(email: string) {
       email: true,
       googleId: true,
       githubId: true,
+      discordId: true,
       primaryProvider: true,
       linkedProviders: true,
       name: true,
@@ -77,6 +78,37 @@ export async function createOrUpdateGitHubUser(githubUser: GitHubUser) {
   });
 
   console.log('✅ [AUTH] GitHub user created/updated successfully:', {
+    id: user.id,
+    email: user.email,
+    isNew: user.createdAt === user.updatedAt
+  });
+  return user;
+}
+
+// Create or update user with Discord info
+export async function createOrUpdateDiscordUser(discordUser: DiscordUser) {
+  console.log('🔄 [AUTH] Creating/updating Discord user in database for email:', discordUser.email);
+  const user = await prisma.user.upsert({
+    where: { email: discordUser.email },
+    update: {
+      name: discordUser.name,
+      image: discordUser.picture,
+      discordId: discordUser.id,
+      linkedProviders: {
+        set: ['discord'] // This will be enhanced later for multi-provider support
+      }
+    },
+    create: {
+      email: discordUser.email,
+      name: discordUser.name,
+      image: discordUser.picture,
+      discordId: discordUser.id,
+      primaryProvider: 'discord',
+      linkedProviders: ['discord'],
+    },
+  });
+
+  console.log('✅ [AUTH] Discord user created/updated successfully:', {
     id: user.id,
     email: user.email,
     isNew: user.createdAt === user.updatedAt

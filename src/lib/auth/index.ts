@@ -5,6 +5,7 @@
 export type {
   GoogleUser,
   GitHubUser,
+  DiscordUser,
   GitHubEmail,
   JWTPayload,
   LinkingTokenData,
@@ -15,6 +16,7 @@ export type {
 export {
   GOOGLE_AUTH_CONFIG,
   GITHUB_AUTH_CONFIG,
+  DISCORD_AUTH_CONFIG,
 } from './config';
 
 // Google OAuth exports
@@ -31,11 +33,19 @@ export {
   getGitHubUserInfo,
 } from './github';
 
+// Discord OAuth exports
+export {
+  getDiscordAuthUrl,
+  exchangeCodeForToken as exchangeDiscordCodeForToken,
+  getDiscordUserInfo,
+} from './discord';
+
 // Database operations exports
 export {
   findUserByEmail,
   createOrUpdateUser,
   createOrUpdateGitHubUser,
+  createOrUpdateDiscordUser,
   getCurrentUser,
 } from './database';
 
