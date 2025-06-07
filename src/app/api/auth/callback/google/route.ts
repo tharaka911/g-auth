@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ENV } from '@/lib/auth/config';
 import { exchangeCodeForToken, getGoogleUserInfo, createOrUpdateUser, generateSessionToken, findUserByEmail, generateLinkingToken } from '@/lib/auth';
 
 // GET /api/auth/callback/google - Handle Google OAuth callback
@@ -16,13 +17,13 @@ export async function GET(request: NextRequest) {
   // Handle OAuth errors
   if (error) {
     console.error('❌ [API] OAuth error received:', error);
-    return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/?error=oauth_error`);
+    return NextResponse.redirect(`${ENV.NEXTAUTH_URL}/?error=oauth_error`);
   }
 
   // Missing authorization code
   if (!code) {
     console.error('❌ [API] No authorization code received from Google');
-    return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/?error=missing_code`);
+    return NextResponse.redirect(`${ENV.NEXTAUTH_URL}/?error=missing_code`);
   }
 
   try {
@@ -61,7 +62,7 @@ export async function GET(request: NextRequest) {
       
       console.log('🔄 [API] Redirecting to account linking page...');
       return NextResponse.redirect(
-        `${process.env.NEXTAUTH_URL}/auth/link-account?token=${linkingToken}`
+        `${ENV.NEXTAUTH_URL}/auth/link-account?token=${linkingToken}`
       );
     }
 
@@ -80,12 +81,12 @@ export async function GET(request: NextRequest) {
 
     // Step 6: Set session cookie and redirect to dashboard
     console.log('🔄 [API] Step 6: Setting session cookie and redirecting...');
-    const response = NextResponse.redirect(`${process.env.NEXTAUTH_URL}/dashboard`);
+    const response = NextResponse.redirect(`${ENV.NEXTAUTH_URL}/dashboard`);
     
     // Set secure HTTP-only cookie
     response.cookies.set('session', sessionToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: ENV.IS_PRODUCTION,
       sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: '/',
@@ -98,7 +99,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('❌ [API] Authentication error:', error);
     return NextResponse.redirect(
-      `${process.env.NEXTAUTH_URL}/?error=authentication_failed`
+      `${ENV.NEXTAUTH_URL}/?error=authentication_failed`
     );
   }
 }

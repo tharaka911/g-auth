@@ -1,17 +1,18 @@
 import { NextResponse } from 'next/server';
+import { ENV } from '@/lib/auth/config';
 
 // POST /api/auth/signout - Sign out user
 export async function POST() {
   console.log('🚀 [API] /api/auth/signout endpoint called');
   try {
     console.log('🔄 [API] Creating redirect response to home page');
-    const response = NextResponse.redirect(`${process.env.NEXTAUTH_URL}/`);
+    const response = NextResponse.redirect(`${ENV.NEXTAUTH_URL}/`);
     
     console.log('🍪 [API] Clearing session cookie');
     // Clear the session cookie
     response.cookies.set('session', '', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: ENV.IS_PRODUCTION,
       sameSite: 'lax',
       maxAge: 0, // Expire immediately
       path: '/',

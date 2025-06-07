@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ENV } from '@/lib/auth/config';
 import { verifyLinkingToken, linkProviderToUser, createOrUpdateGitHubUser, createOrUpdateUser, generateSessionToken } from '@/lib/auth';
 import type { GitHubUser, GoogleUser } from '@/lib/auth';
 
@@ -83,7 +84,7 @@ export async function POST(request: NextRequest) {
     // Set secure HTTP-only cookie
     response.cookies.set('session', sessionToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: ENV.IS_PRODUCTION,
       sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: '/',

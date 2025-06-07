@@ -1,12 +1,13 @@
 import jwt from 'jsonwebtoken';
 import type { JWTPayload } from './types';
+import { ENV } from './config';
 
 // Generate JWT session token
 export function generateSessionToken(userId: string): string {
   console.log('🔑 [AUTH] Generating session token for userId:', userId);
   const token = jwt.sign(
     { userId, iat: Date.now() },
-    process.env.JWT_SECRET!,
+    ENV.JWT_SECRET,
     { expiresIn: '7d' }
   );
   console.log('✅ [AUTH] Session token generated successfully');
@@ -17,7 +18,7 @@ export function generateSessionToken(userId: string): string {
 export function verifySessionToken(token: string): { userId: string } | null {
   console.log('🔍 [AUTH] verifySessionToken called with token:', token ? 'TOKEN_EXISTS' : 'NO_TOKEN');
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
+    const decoded = jwt.verify(token, ENV.JWT_SECRET) as JWTPayload;
     console.log('✅ [AUTH] Token verified successfully for userId:', decoded.userId);
     return { userId: decoded.userId };
   } catch (error) {
