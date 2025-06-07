@@ -5,8 +5,8 @@ import { ENV } from '@/lib/auth/config';
 export async function POST() {
   console.log('🚀 [API] /api/auth/signout endpoint called');
   try {
-    console.log('🔄 [API] Creating redirect response to home page');
-    const response = NextResponse.redirect(`${ENV.NEXTAUTH_URL}/`);
+    console.log('🔄 [API] Creating JSON response - letting client handle navigation to home page');
+    const response = NextResponse.json({ success: true, message: 'Signed out successfully' });
     
     console.log('🍪 [API] Clearing session cookie');
     // Clear the session cookie
