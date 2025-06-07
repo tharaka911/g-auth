@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -15,7 +16,7 @@ interface LinkingData {
   };
 }
 
-export default function LinkAccountPage() {
+function LinkAccountContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
@@ -163,14 +164,16 @@ export default function LinkAccountPage() {
         
         <CardContent className="space-y-6">
           <div className="text-center space-y-4">
-            <div className="flex items-center justify-center">
-              <img 
-                src={linkingData.providerUser.picture} 
-                alt="Profile" 
+              <Image
+                src={linkingData.providerUser.picture}
+                alt="Profile"
+                width={64}
+                height={64}
                 className="w-16 h-16 rounded-full"
               />
             </div>
             
+            <div className="space-y-4">
             <div>
               <p className="font-medium">{linkingData.providerUser.name}</p>
               <p className="text-sm text-gray-600">{linkingData.email}</p>
@@ -187,42 +190,63 @@ export default function LinkAccountPage() {
               </p>
             </div>
           </div>
-
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-              <p className="text-sm text-red-600">{error}</p>
-            </div>
-          )}
-
-          <div className="space-y-3">
-            <Button 
-              onClick={handleLinkAccounts}
-              disabled={processing}
-              className="w-full"
-            >
-              {processing ? 'Linking...' : `Yes, Link Accounts`}
-            </Button>
-            
-            <Button 
-              onClick={handleKeepSeparate}
-              disabled={processing}
-              variant="outline"
-              className="w-full"
-            >
-              {processing ? 'Creating...' : 'No, Keep Separate'}
-            </Button>
-          </div>
-          
-          <div className="text-center">
-            <button 
-              onClick={() => router.push('/')}
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              Cancel and go home
-            </button>
-          </div>
         </CardContent>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+            <p className="text-sm text-red-600">{error}</p>
+          </div>
+        )}
+
+        <div className="space-y-3 px-6 pb-6">
+          <Button 
+            onClick={handleLinkAccounts}
+            disabled={processing}
+            className="w-full"
+          >
+            {processing ? 'Linking...' : `Yes, Link Accounts`}
+          </Button>
+          
+          <Button 
+            onClick={handleKeepSeparate}
+            disabled={processing}
+            variant="outline"
+            className="w-full"
+          >
+            {processing ? 'Creating...' : 'No, Keep Separate'}
+          </Button>
+        </div>
+        
+        <div className="text-center pb-6">
+          <button 
+            onClick={() => router.push('/')}
+            className="text-sm text-gray-500 hover:text-gray-700"
+          >
+            Cancel and go home
+          </button>
+        </div>
       </Card>
     </div>
+  );
+}
+
+// Loading component for Suspense fallback
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+        <p className="mt-2 text-gray-600">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+// Main page component with Suspense wrapper
+export default function LinkAccountPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <LinkAccountContent />
+    </Suspense>
   );
 }
