@@ -78,40 +78,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* OAuth Flow Explanation */}
-        <Card>
-          <CardHeader>
-            <CardTitle>How the Authentication Flow Worked</CardTitle>
-            <CardDescription>
-              Understanding the manual Google OAuth implementation
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <ol className="list-decimal list-inside space-y-3 text-sm">
-              <li>
-                <strong>Authorization Request:</strong> You clicked &ldquo;Sign in with Google&rdquo; and were redirected to Google&apos;s authorization server
-              </li>
-              <li>
-                <strong>User Consent:</strong> Google showed you the consent screen to authorize our application
-              </li>
-              <li>
-                <strong>Authorization Code:</strong> Google redirected back to our app with an authorization code
-              </li>
-              <li>
-                <strong>Token Exchange:</strong> Our server exchanged the authorization code for an access token
-              </li>
-              <li>
-                <strong>User Information:</strong> We used the access token to fetch your profile from Google&apos;s API
-              </li>
-              <li>
-                <strong>Database Storage:</strong> Your user information was stored/updated in our PostgreSQL database
-              </li>
-              <li>
-                <strong>Session Creation:</strong> A JWT session token was generated and stored as an HTTP-only cookie
-              </li>
-            </ol>
-          </CardContent>
-        </Card>
+        
 
         {/* Actions */}
         <div className="flex gap-4 justify-center flex-col sm:flex-row">
